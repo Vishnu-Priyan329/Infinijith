@@ -1,0 +1,40 @@
+Q5 (15 Marks) – Paragraph Answer / File Upload: Create a simple NodeJS REST API with:
+
+GET /products → returns product list
+
+POST /products → accepts product name & price and stores in an in-memory list
+
+
+
+
+const express = require('express');
+const app = express();
+const port = 3000;
+
+app.use(express.json());
+
+let products = [
+    { name: 'Laptop', price: 1200 },
+    { name: 'Phone', price: 800 },
+    { name: 'Headphones', price: 150 }
+];
+
+app.get('/products', (req, res) => {
+    res.json(products);
+});
+
+app.post('/products', (req, res) => {
+    const { name, price } = req.body;
+
+    if (!name || !price || isNaN(price)) {
+        return res.status(400).json({ message: 'Product name and price are required, and price must be a number.' });
+    }
+
+    products.push({ name, price: parseFloat(price) });
+
+    res.status(201).json(products);
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
